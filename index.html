@@ -18,17 +18,21 @@
     }
 
     function showKey() {
-        let g = getParam('game'), ks = JSON.parse(localStorage.getItem('ks')) || {};
-        document.body.textContent = g && ks[g] ? ks[g].k : 'Invalid game';
+        let g = getParam('game');
+        if (!g) {
+            document.body.textContent = 'Invalid game';
+            return;
+        }
+        let ks = JSON.parse(localStorage.getItem('ks')) || {};
+        if (!ks[g]) {
+            ks[g] = { k: genKey(), t: Date.now() };
+            localStorage.setItem('ks', JSON.stringify(ks));
+        }
+        document.body.textContent = ks[g].k;
     }
 
     function init() {
         updKeys();
-        let g = getParam('game'), ks = JSON.parse(localStorage.getItem('ks')) || {};
-        if (g && !ks[g]) {
-            ks[g] = { k: genKey(), t: Date.now() };
-            localStorage.setItem('ks', JSON.stringify(ks));
-        }
         showKey();
         setInterval(updKeys, 259200000);
     }
