@@ -1,0 +1,55 @@
+<!DOCTYPE html><html>
+<head>
+    <script>
+        function generateKey() {
+            let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let key = '';
+            for (let i = 0; i < 12; i++) {
+                key += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return key;
+        }function getQueryParam(param) {
+        let urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    function updateKeyStorage() {
+        let keys = JSON.parse(localStorage.getItem('game_keys')) || {};
+        for (let game in keys) {
+            if (Date.now() - keys[game].timestamp > 10000) { // tes
+                keys[game] = { key: generateKey(), timestamp: Date.now() };
+            }
+        }
+        localStorage.setItem('game_keys', JSON.stringify(keys));
+    }
+
+    function displayKey() {
+        let game = getQueryParam('game');
+        let keys = JSON.parse(localStorage.getItem('game_keys')) || {};
+
+        if (game && keys[game]) {
+            document.body.textContent = keys[game].key;
+        } else {
+            document.body.textContent = 'Invalid game';
+        }
+    }
+
+    function initialize() {
+        updateKeyStorage();
+        let game = getQueryParam('game');
+        if (game) {
+            let keys = JSON.parse(localStorage.getItem('game_keys')) || {};
+            if (!keys[game]) {
+                keys[game] = { key: generateKey(), timestamp: Date.now() };
+                localStorage.setItem('game_keys', JSON.stringify(keys));
+            }
+        }
+        displayKey();
+        setInterval(updateKeyStorage, 10000); // updater  
+    }
+</script>
+
+</head>
+<body onload="initialize()">
+</body>
+</html>
