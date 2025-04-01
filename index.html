@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <style>
+        body {
+            font-family: monospace;
+            font-size: 30px;
+            line-height: 1.6;
+            text-align: center;
+            margin-top: 20%;
+        }
+    </style>
     <script>
         function hashKey(g, t) {
             let c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', k = '', h = 0;
             for (let i = 0; i < g.length; i++) h = (h * 31 + g.charCodeAt(i)) % c.length;
-            let d = Math.floor(t / 259200000);
+            let d = Math.floor(t / 259200000);  // Update every 3 days
             for (let i = 0; i < 12; i++) k += c[(h + i * 7 + d) % c.length];
             return k;
         }
