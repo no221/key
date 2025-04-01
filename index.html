@@ -1,20 +1,14 @@
 <!DOCTYPE html><html>
 <head>
     <script>
-        function genKey() {
-            let c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', k = '';
-            for (let i = 0; i < 12; i++) k += c.charAt(Math.floor(Math.random() * c.length));
+        function hashKey(g, t) {
+            let c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', k = '', h = 0;
+            for (let i = 0; i < g.length; i++) h = (h * 31 + g.charCodeAt(i)) % c.length;
+            let d = Math.floor(t / 259200000);
+            for (let i = 0; i < 12; i++) k += c[(h + i * 7 + d) % c.length];
             return k;
         }function getParam(p) {
         return new URLSearchParams(window.location.search).get(p);
-    }
-
-    function updKeys() {
-        let ks = JSON.parse(localStorage.getItem('ks')) || {};
-        for (let g in ks) {
-            if (Date.now() - ks[g].t > 259200000) ks[g] = { k: genKey(), t: Date.now() };
-        }
-        localStorage.setItem('ks', JSON.stringify(ks));
     }
 
     function showKey() {
@@ -23,18 +17,12 @@
             document.body.textContent = 'Invalid game';
             return;
         }
-        let ks = JSON.parse(localStorage.getItem('ks')) || {};
-        if (!ks[g]) {
-            ks[g] = { k: genKey(), t: Date.now() };
-            localStorage.setItem('ks', JSON.stringify(ks));
-        }
-        document.body.textContent = ks[g].k;
+        document.body.textContent = hashKey(g, Date.now());
     }
 
     function init() {
-        updKeys();
         showKey();
-        setInterval(updKeys, 259200000);
+        setInterval(showKey, 1000);
     }
 </script>
 
