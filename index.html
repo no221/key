@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <style>
+        body {
+            font-size: 30px;
+            font-family: Arial, sans-serif;
+        }
+    </style>
     <script>
-        function hashKey(g, t) {
+        function hashKey(g) {
             let c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', k = '', h = 0;
             for (let i = 0; i < g.length; i++) h = (h * 31 + g.charCodeAt(i)) % c.length;
-            let d = Math.floor(t / 259200000);  // Update every 3 days
-            for (let i = 0; i < 12; i++) k += c[(h + i * 7 + d) % c.length];
+            for (let i = 0; i < 20; i++) k += c[(h + i * 7) % c.length];
             return k;
         }
 
@@ -20,7 +25,15 @@
                 document.body.textContent = 'Invalid game';
                 return;
             }
-            document.body.textContent = hashKey(g, Date.now());
+
+            let storedKey = localStorage.getItem('key_' + g);
+            if (storedKey) {
+                document.body.textContent = storedKey;
+            } else {
+                let generatedKey = hashKey(g);
+                localStorage.setItem('key_' + g, generatedKey);
+                document.body.textContent = generatedKey;
+            }
         }
 
         function init() {
