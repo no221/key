@@ -8,7 +8,7 @@ permissions:
   contents: write
 
 env:
-  NUM_KEYS: 1  
+  NUM_KEYS: 5
 jobs:
   update-keys:
     runs-on: ubuntu-latest
