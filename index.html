@@ -1,46 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <style>
-        body {
-            font-size: 30px;
-            font-family: Arial, sans-serif;
-        }
-    </style>
-    <script>
-        function hashKey(g) {
-            let c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', k = '', h = 0;
-            for (let i = 0; i < g.length; i++) h = (h * 31 + g.charCodeAt(i)) % c.length;
-            for (let i = 0; i < 20; i++) k += c[(h + i * 7) % c.length];
-            return k;
-        }
-
-        function getParam(p) {
-            return new URLSearchParams(window.location.search).get(p);
-        }
-
-        function showKey() {
-            let g = getParam('game');
-            if (!g) {
-                document.body.textContent = 'Invalid game';
-                return;
-            }
-
-            let storedKey = localStorage.getItem('key_' + g);
-            if (storedKey) {
-                document.body.textContent = storedKey;
-            } else {
-                let generatedKey = hashKey(g);
-                localStorage.setItem('key_' + g, generatedKey);
-                document.body.textContent = generatedKey;
-            }
-        }
-
-        function init() {
-            showKey();
-        }
-    </script>
+    <meta charset="UTF-8">
+    <title>Key Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
 </head>
-<body onload="init()">
+<body>
+    <div id="output"></div>
 </body>
 </html>
